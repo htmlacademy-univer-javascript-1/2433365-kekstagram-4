@@ -27,23 +27,32 @@ function getRandomInt (min, max) {
 }
 
 //Нахождение случайного неповторяющегося числа
-function createUniqueIdGenerator (min,max) {
-  const previousValues=[];
-  let currentValue = getRandomInt(min, max);
-  while (previousValues.includes(currentValue)) {
-    currentValue = getRandomInt(min, max);
-  }
-  previousValues.push(currentValue);
+function createUniqueIdGenerator (min, max) {
+  const previousValues = [];
 
-  return currentValue;
+  return function () {
+    let currentValue = getRandomInt(min, max);
+    if (previousValues.length >= (max - min + 1)) {
+      return null;
+    }
+    while (previousValues.includes(currentValue)) {
+      currentValue = getRandomInt(min, max);
+    }
+    previousValues.push(currentValue);
+    return currentValue;
+  };
 }
+
+const createUniqueId = createUniqueIdGenerator(1,25);
+const createUniqueUrl = createUniqueIdGenerator(1,25);
+const createUniqueCommId = createUniqueIdGenerator(1,10000);
 
 //Функция для нахождения случайного элемента массива
 const getRandomArrayElement = (elements) => elements[getRandomInt(0, elements.length - 1)];
 
 //Создаём комментарии
 const createComment = () => ({
-  id: createUniqueIdGenerator(0,10000),
+  id: createUniqueCommId(),
   avatar: `img/avatar-${getRandomInt(1,6)}.svg`,
   message: getRandomArrayElement(messages),
   name: getRandomArrayElement(names),
@@ -53,8 +62,8 @@ const createdMessages = Array.from({length: getRandomInt(0,30)}, createComment);
 
 //Создаём фотографии
 const createPhoto = () => ({
-  id: createUniqueIdGenerator(1,25),
-  url: `photos/${createUniqueIdGenerator(1,25)}.jpg`,
+  id: createUniqueId(),
+  url: `photos/${createUniqueUrl()}.jpg`,
   description: getRandomArrayElement(descriptions),
   likes: getRandomInt(15,200),
   comments: createdMessages,
