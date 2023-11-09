@@ -1,4 +1,4 @@
-import './functions.js';
+import './photo.js';
 import {createdPhotos} from './data.js';
 
 createdPhotos();
