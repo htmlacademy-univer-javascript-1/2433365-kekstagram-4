@@ -34,7 +34,7 @@ const createComment = () => ({
   name: getRandomArrayElement(names),
 });
 
-const createdMessages = Array.from({length: getRandomInt(0,30)}, createComment);
+const createdMessages = () => Array.from({length: getRandomInt(0,30)}, createComment);
 
 //Создаём фотографии
 const createPhoto = () => ({
@@ -42,8 +42,8 @@ const createPhoto = () => ({
   url: `photos/${createUniqueUrl()}.jpg`,
   description: getRandomArrayElement(descriptions),
   likes: getRandomInt(15,200),
-  comments: createdMessages,
+  comments: createdMessages()
 });
 
 const createdPhotos = () => Array.from({length: 25}, createPhoto);
-export {createdPhotos};
+export {createdPhotos, createdMessages};
