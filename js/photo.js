@@ -1,10 +1,8 @@
+import { render } from './renderFullscreenImg.js';
+// import { render } from './renderFullscreenImg copy.js';
+
 const newPhotoTemplate = document.querySelector('#picture').content;
-
-const data = [
-  { url: './img/logo-background-2.jpg', description: 'Desc1', likes: 5, comments: 2 },
-  { url: './img/logo-background-1.jpg', description: 'Desc2', likes: 10, comments: 3 },
-];
-
+const picturesBlock = document.querySelector('.pictures');
 function createPicture(item) {
   const newPhoto = newPhotoTemplate.cloneNode(true);
   const pictureImage = newPhoto.querySelector('.picture__img');
@@ -16,18 +14,23 @@ function createPicture(item) {
 
   pictureLikes.textContent = item.likes;
 
-  pictureComments.textContent = item.comments;
+  pictureComments.textContent = item.comments.length;
 
   return newPhoto;
 }
 
-function renderPictures(pictures) {
-  const picturesBlock = document.querySelector('.pictures');
+function renderPicturesList(pictures) {
 
   pictures.forEach((item) => {
     const picture = createPicture(item);
     picturesBlock.appendChild(picture);
+    // render(item);
   });
+  render(pictures);
 }
 
-renderPictures(data);
+const clearPicturesList = () => {
+  picturesBlock.innerHTML = '';
+};
+
+export {renderPicturesList, clearPicturesList};

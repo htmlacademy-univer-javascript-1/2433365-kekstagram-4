@@ -58,4 +58,6 @@ const getNumber = function (string) {
 
 getNumber('ECMASCRIPT 2022');
 
-export {getRandomInt, createUniqueIdGenerator};
+const isEscapeKey = (evt) => evt.key === 'Escape';
+
+export {getRandomInt, createUniqueIdGenerator, isEscapeKey};
