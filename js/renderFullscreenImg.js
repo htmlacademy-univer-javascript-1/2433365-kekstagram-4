@@ -13,6 +13,28 @@ function render (item) {
   const commentsList = bigPictureWindow.querySelector('.social__comments');
 
   const closeButton = bigPictureWindow.querySelector('.big-picture__cancel');
+  const commentsLoader = bigPictureWindow.querySelector('.comments-loader');
+
+  const commentsCount = bigPictureWindow.querySelector('.social__comment-count');
+
+  const showMoreComments = (evt) => {
+    evt.preventDefault();
+    let counter;
+    if (commentsList.children.length>5){
+      counter = 5;
+      for (let i=0;i<commentsList.children.length;i++){
+        if (commentsList.children[i].classList.contains('hidden')) {
+          commentsList.children[i].classList.remove('hidden');
+          counter +=5;
+        }
+      }
+      if (commentsList.children.length%5!==0) {
+        counter+=commentsList.children.length;
+      }
+      if (commentsList.children.length<counter) {counter = commentsList.children.length;}
+    } else {counter=commentsList.children.length;}
+    commentsCount.textContent=`${counter} из ${commentsList.children.length} комментариев`;
+  };
 
   const onClickClose = (evt) => {
     evt.preventDefault();
@@ -32,6 +54,7 @@ function render (item) {
 
     document.addEventListener('keydown', onDocumentKeydown);
     closeButton.addEventListener('click', onClickClose);
+    commentsLoader.addEventListener('click', showMoreComments);
   }
 
   function closeBigPic() {
@@ -41,6 +64,7 @@ function render (item) {
 
     document.removeEventListener('keydown', onDocumentKeydown);
     closeButton.removeEventListener('click', onClickClose);
+    commentsLoader.removeEventListener('click', showMoreComments);
   }
 
   for (let i=0; i<miniPics.length;i++) {
@@ -62,6 +86,7 @@ function render (item) {
       for (let j=0;j<item[i].comments.length;j++) {
         const newComment = document.createElement('li');
         newComment.classList.add('social__comment');
+        newComment.classList.add('hidden');
 
         const CommImg = document.createElement('img');
         CommImg.classList.add('social__picture');
@@ -78,7 +103,10 @@ function render (item) {
         newComment.appendChild(message);
         commentsList.appendChild(newComment);
       }
-
+      if (commentsList.children.length>5) {
+        commentsCount.textContent=`5 из ${commentsList.children.length} комментариев`;
+      } else {commentsCount.textContent=`${commentsList.children.length} из ${commentsList.children.length} комментариев`;}
+      for (let j=0; j<5;j++){commentsList.children[j].classList.remove('hidden');}
       imgDesc.textContent=img.alt;
     });
   }
