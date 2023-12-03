@@ -46,4 +46,4 @@ const createPhoto = () => ({
 });
 
 const createdPhotos = () => Array.from({length: 25}, createPhoto);
-export {createdPhotos, createdMessages};
+export {createdPhotos};
