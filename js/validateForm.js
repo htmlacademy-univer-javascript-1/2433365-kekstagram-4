@@ -1,7 +1,12 @@
+import {resetScale} from './scale.js';
+import {
+  init as initEffect,
+  reset as resetEffect
+} from './effect.js';
 import { isEscapeKey } from './util.js';
 
 const MAX_HASHTAGS_COUNT = 5;
-const VALID_SYMBOLS = /^[a-zа-яё0-9]{1,19}$/i;
+const VALID_SYMBOLS = /^#[a-zа-яё0-9]{1,19}$/i;
 const errorText = {
   INVALID_COUNT: `Максимум ${MAX_HASHTAGS_COUNT} хэштегов`,
   NOT_UNIQUE: 'Хэштеги должны быть уникальными',
@@ -45,6 +50,8 @@ const onImgLoad = () => {
 
 function onFormClose () {
   form.reset();
+  resetScale();
+  resetEffect();
   pristine.reset();
   uploadOverlay.classList.add('hidden');
   document.querySelector('body').classList.remove('modal-open');
@@ -99,3 +106,4 @@ pristine.addValidator(
 form.addEventListener('submit', onSubmit);
 
 imageInput.addEventListener('change', onImgLoad);
+initEffect();
