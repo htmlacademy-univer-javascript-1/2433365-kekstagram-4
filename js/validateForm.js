@@ -1,3 +1,8 @@
+import {resetScale} from './scale.js';
+import {
+  init as initEffect,
+  reset as resetEffect
+} from './effect.js';
 import { isEscapeKey } from './util.js';
 
 const MAX_HASHTAGS_COUNT = 5;
@@ -45,6 +50,8 @@ const onImgLoad = () => {
 
 function onFormClose () {
   form.reset();
+  resetScale();
+  resetEffect();
   pristine.reset();
   uploadOverlay.classList.add('hidden');
   document.querySelector('body').classList.remove('modal-open');
@@ -99,3 +106,4 @@ pristine.addValidator(
 form.addEventListener('submit', onSubmit);
 
 imageInput.addEventListener('change', onImgLoad);
+initEffect();
