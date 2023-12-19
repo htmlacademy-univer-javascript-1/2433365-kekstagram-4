@@ -12,6 +12,10 @@ const errorText = {
   NOT_UNIQUE: 'Хэштеги должны быть уникальными',
   INVALID_PATTERN: 'Неправильный хэштег',
 };
+const submitButtonText = {
+  IDLE: 'Опубликовать',
+  SUBMITTING:'Отправляю на сервер...',
+};
 
 const form = document.querySelector('#upload-select-image');
 const imageInput = form.querySelector('#upload-file');
@@ -19,12 +23,15 @@ const uploadOverlay = form.querySelector('.img-upload__overlay');
 const commentField = form.querySelector('.text__description');
 const hashtagField = form.querySelector('.text__hashtags');
 const closeButton = form.querySelector('#upload-cancel');
+const submitButton = form.querySelector('#upload-submit');
 
 const pristine = new Pristine(form, {
   classTo: 'img-upload__field-wrapper',
   errorTextParent: 'img-upload__field-wrapper',
   errorTextClass: 'img-upload__field-wrapper--error',
 });
+
+const isErrorMessageShown = () => Boolean(document.querySelector('.error'));
 
 const isTextFieldFocused = () =>
   document.activeElement === hashtagField || document.activeElement === commentField;
@@ -34,7 +41,7 @@ const onClickClose = () => {
 };
 
 const onDocumentKeydown = (evt) => {
-  if (isEscapeKey(evt) && !isTextFieldFocused()){
+  if (isEscapeKey(evt) && !isTextFieldFocused() && !isErrorMessageShown()){
     evt.preventDefault();
     onFormClose();
   }
@@ -60,6 +67,11 @@ function onFormClose () {
   document.removeEventListener('keydown', onDocumentKeydown);
 }
 
+const toggleSubmitButton = (isDisabled) => {
+  submitButton.disabled = isDisabled;
+  submitButton.textContent = isDisabled ? submitButtonText.SUBMITTING:submitButtonText.IDLE;
+};
+
 const normalizeTags = (tagStr) => tagStr
   .trim()
   .split(' ')
@@ -70,12 +82,6 @@ const hasValidCount = (value) => normalizeTags(value).length <= MAX_HASHTAGS_COU
 const hasUniqueTags = (value) => {
   const lowerTags = normalizeTags(value).map((tag) => tag.toLowerCase());
   return lowerTags.length === new Set(lowerTags).size;
-};
-
-
-const onSubmit = (evt) => {
-  evt.preventDefault();
-  pristine.validate();
 };
 
 pristine.addValidator(
@@ -102,8 +108,21 @@ pristine.addValidator(
   true
 );
 
+const setOnFormSubmit = (callback) => {
+  const onSubmit = async (evt) => {
+    evt.preventDefault();
+    const isValid = pristine.validate();
+    if(isValid) {
+      toggleSubmitButton(true);
+      await callback(new FormData(form));
+      toggleSubmitButton();
+    }
+  };
 
-form.addEventListener('submit', onSubmit);
+  form.addEventListener('submit', onSubmit);
+};
 
 imageInput.addEventListener('change', onImgLoad);
 initEffect();
+
+export {setOnFormSubmit, onFormClose};
