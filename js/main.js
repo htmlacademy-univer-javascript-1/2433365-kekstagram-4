@@ -1,6 +1,17 @@
-import {renderPicturesList} from './photo.js';
-import {createdPhotos} from './data.js';
 import './validateForm.js';
 import './scale.js';
+import { sendData, setDataFromServer } from './api.js';
+import { showSuccessMessage, showErrorMessage } from './message.js';
+import { setOnFormSubmit, onFormClose } from './validateForm.js';
 
-renderPicturesList(createdPhotos());
+setOnFormSubmit(async (data) => {
+  try {
+    await sendData(data);
+    onFormClose();
+    showSuccessMessage();
+  } catch (err) {
+    showErrorMessage(err.message);
+  }
+});
+
+setDataFromServer();

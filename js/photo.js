@@ -19,7 +19,6 @@ function createPicture({comments, description, likes, url}) {
 }
 
 function renderPicturesList(pictures) {
-
   pictures.forEach((item) => {
     const picture = createPicture(item);
     picture.addEventListener('click', (evt) => {
