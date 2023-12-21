@@ -19,66 +19,24 @@ const showAlert = (message) => {
   }, ALERT_SHOW_TIME);
 };
 
-//Нахождение случайного числа
-function getRandomInt (min, max) {
-  const lower = Math.ceil(Math.min(min,max));
-  const upper = Math.floor(Math.max(min, max));
-  const result = Math.random() * (upper-lower+1)+lower;
+function debounce (callback, timeoutDelay = 500) {
+  // Используем замыкания, чтобы id таймаута у нас навсегда приклеился
+  // к возвращаемой функции с setTimeout, тогда мы его сможем перезаписывать
+  let timeoutId;
 
-  return Math.floor(result);
-}
+  return (...rest) => {
+    // Перед каждым новым вызовом удаляем предыдущий таймаут,
+    // чтобы они не накапливались
+    clearTimeout(timeoutId);
 
-//Нахождение случайного неповторяющегося числа
-function createUniqueIdGenerator (min, max) {
-  const previousValues = [];
+    // Затем устанавливаем новый таймаут с вызовом колбэка на ту же задержку
+    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
 
-  return function () {
-    let currentValue = getRandomInt(min, max);
-    if (previousValues.length >= (max - min + 1)) {
-      return null;
-    }
-    while (previousValues.includes(currentValue)) {
-      currentValue = getRandomInt(min, max);
-    }
-    previousValues.push(currentValue);
-    return currentValue;
+    // Таким образом цикл «поставить таймаут - удалить таймаут» будет выполняться,
+    // пока действие совершается чаще, чем переданная задержка timeoutDelay
   };
 }
 
-const isFit = function (string, length) {
-  return string.length<=length;
-};
-
-isFit('абвгдеж', 10);
-
-const IsPalindrome = function (string) {
-  let reversedString = '';
-  const correctString = string.replaceAll(' ', '').toLowerCase();
-  reversedString = [...correctString].reverse().join('');
-  return correctString===reversedString;
-};
-
-IsPalindrome('Кекс');
-
-const getNumber = function (string) {
-  string=string.toString();
-  let result = '';
-  for (let i=0; i<string.length; i++){
-    string=string.replaceAll(' ','');
-    if (!isNaN(string[i])){
-      const number = parseInt(string[i], 10);
-      result+=number;
-    }
-  }
-  if (result===''){
-    return 'NaN';
-  } else {
-    return result;
-  }
-};
-
-getNumber('ECMASCRIPT 2022');
-
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
-export {getRandomInt, createUniqueIdGenerator, isEscapeKey, showAlert};
+export {isEscapeKey, showAlert, debounce};

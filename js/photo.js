@@ -19,6 +19,7 @@ function createPicture({comments, description, likes, url}) {
 }
 
 function renderPicturesList(pictures) {
+  picturesBlock.querySelectorAll('.picture').forEach((element) => element.remove());
   pictures.forEach((item) => {
     const picture = createPicture(item);
     picture.addEventListener('click', (evt) => {
