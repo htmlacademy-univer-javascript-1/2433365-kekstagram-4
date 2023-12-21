@@ -1,8 +1,8 @@
-import './validateForm.js';
 import './scale.js';
 import { sendData, setDataFromServer } from './api.js';
 import { showSuccessMessage, showErrorMessage } from './message.js';
 import { setOnFormSubmit, onFormClose } from './validateForm.js';
+import './filters.js';
 
 setOnFormSubmit(async (data) => {
   try {
