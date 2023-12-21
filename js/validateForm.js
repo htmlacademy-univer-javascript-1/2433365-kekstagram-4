@@ -17,6 +17,8 @@ const submitButtonText = {
   SUBMITTING:'Отправляю на сервер...',
 };
 
+const FILE_TYPES = ['jpg', 'jpeg', 'png'];
+
 const form = document.querySelector('#upload-select-image');
 const imageInput = form.querySelector('#upload-file');
 const uploadOverlay = form.querySelector('.img-upload__overlay');
@@ -24,6 +26,9 @@ const commentField = form.querySelector('.text__description');
 const hashtagField = form.querySelector('.text__hashtags');
 const closeButton = form.querySelector('#upload-cancel');
 const submitButton = form.querySelector('#upload-submit');
+
+const preview = form.querySelector('.img-upload__preview img');
+const effectsPreview = form.querySelectorAll('.effects__preview');
 
 const pristine = new Pristine(form, {
   classTo: 'img-upload__field-wrapper',
@@ -48,6 +53,16 @@ const onDocumentKeydown = (evt) => {
 };
 
 const onImgLoad = () => {
+  const file = imageInput.files[0];
+  const fileName = file.name.toLowerCase();
+  const matches = FILE_TYPES.some((it) => fileName.endsWith(it));
+  if (matches) {
+    preview.src = URL.createObjectURL(file);
+    effectsPreview.forEach((bgPicture) => {
+      bgPicture.style.backgroundImage = `url(${preview.src})`;
+    });
+  }
+
   uploadOverlay.classList.remove('hidden');
   document.querySelector('body').classList.add('modal-open');
 
